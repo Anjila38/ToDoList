@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/components/card.dart';
+import 'package:todolist/components/dialogBox.dart';
 
 class Mainpage extends StatefulWidget {
   const Mainpage({super.key});
@@ -9,6 +10,20 @@ class Mainpage extends StatefulWidget {
 }
 
 class _MainpageState extends State<Mainpage> {
+  void cancelBtn() {
+    setState(() {
+      Navigator.pop(context);
+    });
+  }
+
+  void saveTask() {
+    setState(() {
+      taskList.add([textController.text, false]);
+    });
+    Navigator.pop(context);
+  }
+
+  final textController = TextEditingController();
   List taskList = [
     ['Travel Plans', false],
     ['Diet Plans', false],
@@ -17,6 +32,25 @@ class _MainpageState extends State<Mainpage> {
     setState(() {
       taskList[index][1] = !taskList[index][1];
     });
+  }
+
+  void taskDelete(int index) {
+    setState(() {
+      taskList.removeAt(index);
+    });
+  }
+
+  void createNewTask() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialogbox(
+          onSave: saveTask,
+          cancelBtn: cancelBtn,
+          controller: textController,
+        );
+      },
+    );
   }
   // final TextEditingController _taskController = TextEditingController();
 
@@ -86,7 +120,7 @@ class _MainpageState extends State<Mainpage> {
                   ],
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: createNewTask,
                   icon: const Icon(Icons.create),
                 )
               ],
@@ -97,6 +131,7 @@ class _MainpageState extends State<Mainpage> {
                 itemCount: taskList.length,
                 itemBuilder: (context, index) {
                   return MyCard(
+                    delTask: () => taskDelete(index),
                     text: taskList[index][0],
                     taskCompleted: taskList[index][1],
                     onChanged: (value) {

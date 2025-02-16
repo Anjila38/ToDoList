@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
-class MyCard extends StatelessWidget {
+class MyCard extends StatefulWidget {
   MyCard({
     super.key,
     required this.text,
     required this.taskCompleted,
     required this.onChanged,
+    required this.delTask,
   });
   final String text;
   final bool taskCompleted;
+
+  void Function()? delTask;
   Function(bool?)? onChanged;
 
+  @override
+  State<MyCard> createState() => _MyCardState();
+}
+
+class _MyCardState extends State<MyCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -22,23 +30,27 @@ class MyCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Checkbox(
-              value: taskCompleted,
-              onChanged: onChanged,
+              value: widget.taskCompleted,
+              onChanged: widget.onChanged,
               checkColor: const Color.fromARGB(255, 255, 255, 255),
               activeColor: Colors.green,
             ),
             TextButton(
                 onPressed: () {},
                 child: Text(
-                  text,
+                  widget.text,
                   style: TextStyle(
                       fontSize: 20,
                       color: const Color.fromARGB(255, 27, 36, 0),
-                      decoration: taskCompleted
+                      decoration: widget.taskCompleted
                           ? TextDecoration.lineThrough
                           : TextDecoration.none),
                 )),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+            IconButton(
+              onPressed: widget.delTask,
+              icon: Icon(Icons.delete),
+              color: const Color.fromARGB(255, 255, 104, 78),
+            )
           ],
         ),
       ),
