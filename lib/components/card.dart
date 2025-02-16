@@ -1,71 +1,45 @@
 import 'package:flutter/material.dart';
 
 class MyCard extends StatelessWidget {
-  const MyCard({
+  MyCard({
     super.key,
     required this.text,
-    required this.customcolor,
-    required this.nextpage,
-    this.isLast = false,
-    this.onDelete,
-    this.hasTopShadow = false,
+    required this.taskCompleted,
+    required this.onChanged,
   });
-
   final String text;
-  final Color customcolor;
-  final VoidCallback? nextpage;
-  final bool isLast;
-  final VoidCallback? onDelete;
-  final bool hasTopShadow;
+  final bool taskCompleted;
+  Function(bool?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Add a top-only shadow if hasTopShadow is true.
-      decoration: BoxDecoration(
-        boxShadow: hasTopShadow
-            ? [
-                BoxShadow(
-                  color: const Color.fromARGB(78, 0, 0, 0).withOpacity(0.1),
-                  offset: const Offset(0, -1), // shadow only above the card
-                  blurRadius: 6,
-                  spreadRadius: 0,
-                ),
-              ]
-            : [],
-      ),
+    return SizedBox(
+      height: 100,
+      width: double.infinity,
       child: Card(
-        elevation: 0, // remove default elevation
-        shape: RoundedRectangleBorder(
-          borderRadius: isLast
-              ? BorderRadius.circular(10) // Last card: all corners rounded
-              : const BorderRadius.vertical(
-                  top: Radius.circular(10), // Only top corners rounded
-                  bottom: Radius.zero, // Bottom corners flat
-                ),
-        ),
-        color: customcolor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-          child: Row(
-            children: [
-              // The text button that navigates to the list page.
-              Expanded(
-                child: TextButton(
-                  onPressed: nextpage,
-                  child: Text(
-                    text,
-                    style: const TextStyle(color: Colors.black87),
-                  ),
-                ),
-              ),
-              // Trash icon for deleting the card.
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.black54),
-                onPressed: onDelete,
-              ),
-            ],
-          ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Checkbox(
+              value: taskCompleted,
+              onChanged: onChanged,
+              checkColor: const Color.fromARGB(255, 255, 255, 255),
+              activeColor: Colors.green,
+            ),
+            TextButton(
+                onPressed: () {},
+                child: Text(
+                  text,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: const Color.fromARGB(255, 27, 36, 0),
+                      decoration: taskCompleted
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none),
+                )),
+            IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+          ],
         ),
       ),
     );
